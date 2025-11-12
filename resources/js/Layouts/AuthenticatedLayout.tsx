@@ -12,7 +12,9 @@ export default function Authenticated({
     children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
     const user = usePage().props.auth.user;
-    const { isAdmin } = usePage().props as any;
+    const { isAdmin, isDev } = usePage().props as any;
+
+    const canAccess = isAdmin || isDev;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
@@ -46,15 +48,27 @@ export default function Authenticated({
                                     <NavLink href={route('systems.index')} active={route().current('systems.*')}>
                                         System
                                     </NavLink>
+                                    
+                                    <NavLink
+                                        href={route('projects.index')}
+                                        active={route().current('projects.*')}
+                                    >
+                                        Projects
+                                    </NavLink>
                                 </>
                                 )}
 
-                                <NavLink
-                                    href={route('projects.index')}
-                                    active={route().current('projects.*')}
-                                >
-                                    Projects
-                                </NavLink>
+                                {canAccess && (
+                                <>
+                                    <NavLink
+                                        href={route('kanbans.index')}
+                                        active={route().current('kanbans.*')}
+                                    >
+                                        Kanban
+                                    </NavLink>
+                                </>
+                                )}
+
                             </div>
                         </div>
 

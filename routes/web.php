@@ -3,10 +3,12 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\DepartmentsController;
+use App\Http\Controllers\KanbanColumnController;
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome', [
@@ -38,9 +40,18 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin')->group(function() {
         Route::resource('departments', DepartmentsController::class);
         Route::resource('systems', SystemController::class);
+        Route::resource('projects', ProjectsController::class);
     });
 
-    Route::resource('projects', ProjectsController::class);
+    Route::middleware('role:admin|dev')->group(function() {
+        Route::resource('kanbans', KanbanController::class);
+
+        Route::scopeBindings()->group(function () {
+            Route::resource('kanbans.columns', KanbanColumnController::class)->except(['show', 'edit', 'create']);
+            Route::patch('kanban/{kanban}/columns/reorder', [KanbanColumnController::class, 'reorder'])->name('kanbans.columns.reorder');
+        });
+    });
+
 
     // Route::middleware('role:admin')->prefix('departments')->group(function () {
     //     Route::get('/', [DepartmentsController::class,'index'])->name('departments.index');

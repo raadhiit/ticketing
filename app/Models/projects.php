@@ -32,7 +32,7 @@ class projects extends Model
         return $this->hasMany(Tickets::class);
     }
 
-    public function board() {
+    public function kanban() {
         return $this->hasOne(Kanban::class);
     }
 

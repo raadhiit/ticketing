@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
             ],
 
             'isAdmin' => $request->user()?->hasRole('admin') ?? false,
+            'isDev'   => $request->user()?->hasRole('dev') ?? false,
             
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
